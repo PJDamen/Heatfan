@@ -1,0 +1,125 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Heatfan",
+        "description": "Log in with your app.heatfan.eu account. Only a refresh token is stored, not your password.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "The Heatfan login for {email} has expired. Enter the password again.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email or password.",
+      "cannot_connect": "Could not reach the Heatfan cloud.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This Heatfan account is already set up.",
+      "reauth_successful": "Logged in again.",
+      "wrong_account": "That is a different Heatfan account."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "radiator_temperature": {
+        "name": "Radiator temperature"
+      },
+      "fan_speed": {
+        "name": "Fan speed"
+      },
+      "temperature_trend": {
+        "name": "Temperature trend",
+        "state": {
+          "rising": "Rising",
+          "falling": "Falling",
+          "stable": "Stable"
+        }
+      },
+      "last_seen": {
+        "name": "Last update"
+      },
+      "board_temperature": {
+        "name": "Board temperature"
+      },
+      "mcu_temperature": {
+        "name": "MCU temperature"
+      },
+      "rssi": {
+        "name": "Wi-Fi signal"
+      }
+    },
+    "select": {
+      "mode": {
+        "name": "Mode",
+        "state": {
+          "mode_1": "Mode 1",
+          "mode_2": "Mode 2",
+          "mode_3": "Mode 3",
+          "mode_4": "Mode 4",
+          "mode_5": "Mode 5",
+          "mode_6": "Mode 6"
+        }
+      }
+    },
+    "number": {
+      "start_temp": {
+        "name": "Start temperature"
+      },
+      "max_temp": {
+        "name": "Max temperature"
+      },
+      "start_speed": {
+        "name": "Start speed"
+      },
+      "max_speed": {
+        "name": "Max speed"
+      }
+    }
+  },
+  "exceptions": {
+    "curve_order": {
+      "message": "{param} conflicts with {pair} ({value}); the start value must not exceed the max value."
+    }
+  },
+  "services": {
+    "set_drive_params": {
+      "name": "Set fan curve",
+      "description": "Change the fan curve of a mode (the active mode when no mode is given).",
+      "fields": {
+        "device_id": {
+          "name": "Units",
+          "description": "Heatfan units to change."
+        },
+        "mode": {
+          "name": "Mode",
+          "description": "Mode 1-6. Defaults to the active mode."
+        },
+        "start_temp": {
+          "name": "Start temperature",
+          "description": "Radiator temperature at which the fans start."
+        },
+        "max_temp": {
+          "name": "Max temperature",
+          "description": "Radiator temperature at which max speed is reached."
+        },
+        "start_speed": {
+          "name": "Start speed",
+          "description": "Fan speed at the start temperature (1-10)."
+        },
+        "max_speed": {
+          "name": "Max speed",
+          "description": "Fan speed at the max temperature (1-10)."
+        }
+      }
+    }
+  }
+}

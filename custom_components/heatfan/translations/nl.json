@@ -1,0 +1,125 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Heatfan",
+        "description": "Log in met je app.heatfan.eu-account. Alleen een refresh-token wordt opgeslagen, niet je wachtwoord.",
+        "data": {
+          "email": "E-mail",
+          "password": "Wachtwoord"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Opnieuw inloggen",
+        "description": "De Heatfan-login voor {email} is verlopen. Vul je wachtwoord opnieuw in.",
+        "data": {
+          "password": "Wachtwoord"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Onjuist e-mailadres of wachtwoord.",
+      "cannot_connect": "Kan de Heatfan-cloud niet bereiken.",
+      "unknown": "Onverwachte fout."
+    },
+    "abort": {
+      "already_configured": "Dit Heatfan-account is al ingesteld.",
+      "reauth_successful": "Opnieuw ingelogd.",
+      "wrong_account": "Dat is een ander Heatfan-account."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "radiator_temperature": {
+        "name": "Radiatortemperatuur"
+      },
+      "fan_speed": {
+        "name": "Ventilatorsnelheid"
+      },
+      "temperature_trend": {
+        "name": "Temperatuurtrend",
+        "state": {
+          "rising": "Stijgend",
+          "falling": "Dalend",
+          "stable": "Stabiel"
+        }
+      },
+      "last_seen": {
+        "name": "Laatste update"
+      },
+      "board_temperature": {
+        "name": "Printtemperatuur"
+      },
+      "mcu_temperature": {
+        "name": "MCU-temperatuur"
+      },
+      "rssi": {
+        "name": "Wifi-signaal"
+      }
+    },
+    "select": {
+      "mode": {
+        "name": "Modus",
+        "state": {
+          "mode_1": "Modus 1",
+          "mode_2": "Modus 2",
+          "mode_3": "Modus 3",
+          "mode_4": "Modus 4",
+          "mode_5": "Modus 5",
+          "mode_6": "Modus 6"
+        }
+      }
+    },
+    "number": {
+      "start_temp": {
+        "name": "Starttemperatuur"
+      },
+      "max_temp": {
+        "name": "Maximumtemperatuur"
+      },
+      "start_speed": {
+        "name": "Startsnelheid"
+      },
+      "max_speed": {
+        "name": "Maximumsnelheid"
+      }
+    }
+  },
+  "exceptions": {
+    "curve_order": {
+      "message": "{param} botst met {pair} ({value}); de startwaarde mag niet hoger zijn dan de maximumwaarde."
+    }
+  },
+  "services": {
+    "set_drive_params": {
+      "name": "Ventilatorcurve instellen",
+      "description": "Wijzig de ventilatorcurve van een modus (de actieve modus als je geen modus opgeeft).",
+      "fields": {
+        "device_id": {
+          "name": "Units",
+          "description": "Heatfan-units om aan te passen."
+        },
+        "mode": {
+          "name": "Modus",
+          "description": "Modus 1-6. Standaard de actieve modus."
+        },
+        "start_temp": {
+          "name": "Starttemperatuur",
+          "description": "Radiatortemperatuur waarbij de ventilatoren starten."
+        },
+        "max_temp": {
+          "name": "Maximumtemperatuur",
+          "description": "Radiatortemperatuur waarbij de maximumsnelheid bereikt wordt."
+        },
+        "start_speed": {
+          "name": "Startsnelheid",
+          "description": "Ventilatorsnelheid bij de starttemperatuur (1-10)."
+        },
+        "max_speed": {
+          "name": "Maximumsnelheid",
+          "description": "Ventilatorsnelheid bij de maximumtemperatuur (1-10)."
+        }
+      }
+    }
+  }
+}

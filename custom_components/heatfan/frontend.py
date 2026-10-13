@@ -25,11 +25,11 @@ DATA_REGISTERED = f"{DOMAIN}_card_registered"
 async def async_register_card(hass: HomeAssistant) -> None:
     """Expose the card and load it on every dashboard.
 
-    Two mechanisms, because each has a gap on its own:
-    - an extra frontend module: works for YAML dashboards, but a browser that
-      loaded the page while Home Assistant was still starting misses it;
-    - a dashboard resource (storage mode): loaded every time a dashboard opens.
-    The card guards against being defined twice.
+    Preferred: a dashboard resource (storage mode). Resources load after the
+    frontend has set up its element registry, like every other custom card.
+    Fallback for YAML resource mode: an extra frontend module. That one can run
+    before the frontend's registry is in place; the card re-registers itself to
+    cover that case.
     """
     if hass.data.get(DATA_REGISTERED):
         return
@@ -48,13 +48,15 @@ async def async_register_card(hass: HomeAssistant) -> None:
     await hass.http.async_register_static_paths(
         [StaticPathConfig(URL_BASE, str(folder), cache_headers=True)]
     )
-    add_extra_js_url(hass, url)
 
     async def _ensure_resource(_event: Event | None = None) -> None:
         try:
-            await _async_ensure_lovelace_resource(hass, url)
+            added = await _async_ensure_lovelace_resource(hass, url)
         except Exception:  # noqa: BLE001 - never block setup over a card
             _LOGGER.debug("Could not register heatfan-card as dashboard resource", exc_info=True)
+            added = False
+        if not added:
+            add_extra_js_url(hass, url)
 
     if hass.state is CoreState.running:
         await _ensure_resource()
@@ -70,12 +72,12 @@ def _lovelace_part(data: Any, name: str) -> Any:
     return getattr(data, name, None)
 
 
-async def _async_ensure_lovelace_resource(hass: HomeAssistant, url: str) -> None:
-    """Add or update our entry in the dashboard resources (storage mode only)."""
+async def _async_ensure_lovelace_resource(hass: HomeAssistant, url: str) -> bool:
+    """Add or update our dashboard resource. False when resources are YAML-managed."""
     lovelace = hass.data.get("lovelace")
     resources = _lovelace_part(lovelace, "resources")
     if resources is None or _lovelace_part(lovelace, "resource_mode") != "storage":
-        return
+        return False
     if not getattr(resources, "loaded", True):
         await resources.async_load()
         resources.loaded = True
@@ -85,6 +87,7 @@ async def _async_ensure_lovelace_resource(hass: HomeAssistant, url: str) -> None
             if item["url"] != url:
                 await resources.async_update_item(item["id"], {"res_type": "module", "url": url})
                 _LOGGER.debug("Updated heatfan-card resource to %s", url)
-            return
+            return True
     await resources.async_create_item({"res_type": "module", "url": url})
     _LOGGER.info("Added heatfan-card to dashboard resources")
+    return True

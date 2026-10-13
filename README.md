@@ -32,7 +32,7 @@ The rooms from the app are not assigned to areas automatically; put each device 
 
 ## Dashboard card
 
-The integration ships a compact card, one per unit. It is loaded automatically; no resource to add. In a dashboard choose **Add card → Heatfan**, pick the unit and optionally a colour and language.
+The integration ships a compact card, one per unit. It is added to your dashboard resources automatically; nothing to set up. In a dashboard choose **Add card → Heatfan**, pick the unit and optionally a colour and language.
 
 ```yaml
 type: custom:heatfan-card
@@ -84,6 +84,9 @@ The integration ships its own icon and logo in `custom_components/heatfan/brand/
 - History lives under `heatfan-controller-dc/history-data/…` (not used; Home Assistant records its own history).
 
 ## Changelog
+
+**0.3.2**
+- Fix: card intermittently showed "Custom element not found: heatfan-card". It was loaded so early that it registered before Home Assistant's frontend set up its own element registry. The card now loads as a dashboard resource only (storage mode) and re-registers itself if the registry changes.
 
 **0.3.1**
 - Fix: "Custom element not found: heatfan-card" when the browser loaded the page while Home Assistant was starting. The card is now also added to the dashboard resources automatically (and kept up to date on updates).

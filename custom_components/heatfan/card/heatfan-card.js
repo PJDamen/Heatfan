@@ -11,7 +11,7 @@
  *   language: auto             # optional: auto | nl | en | de
  */
 
-const CARD_VERSION = "0.3.1";
+const CARD_VERSION = "0.3.2";
 const DEFAULT_COLOR = "#6E56F0";
 
 const STRINGS = {
@@ -567,15 +567,37 @@ class HeatfanCard extends HTMLElement {
   }
 }
 
-if (!customElements.get("heatfan-card")) {
-  customElements.define("heatfan-card", HeatfanCard);
+// Home Assistant's frontend replaces window.customElements with its own
+// (scoped) registry once it has started. If this file runs before that, a
+// definition made now ends up in a registry the dashboard no longer reads,
+// and the dashboard reports "Custom element not found". So: define now, and
+// keep checking for a while; define again (with a fresh subclass, since one
+// constructor may only be registered once) whenever the active registry
+// doesn't know the card.
+function registerHeatfanCard() {
+  if (customElements.get("heatfan-card")) return true;
+  try {
+    customElements.define("heatfan-card", class extends HeatfanCard {});
+  } catch (err) {
+    return !!customElements.get("heatfan-card");
+  }
   window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "heatfan-card",
-    name: "Heatfan",
-    description: "Compact card for one Heatfan radiator fan unit.",
-    preview: true,
-    documentationURL: "https://github.com/PJDamen/heatfan",
-  });
-  console.info(`%c HEATFAN-CARD %c ${CARD_VERSION} `, "background:#6E56F0;color:#fff;border-radius:3px 0 0 3px", "background:#333;color:#fff;border-radius:0 3px 3px 0");
+  if (!window.customCards.some((c) => c.type === "heatfan-card")) {
+    window.customCards.push({
+      type: "heatfan-card",
+      name: "Heatfan",
+      description: "Compact card for one Heatfan radiator fan unit.",
+      preview: true,
+      documentationURL: "https://github.com/PJDamen/heatfan",
+    });
+    console.info(`%c HEATFAN-CARD %c ${CARD_VERSION} `, "background:#6E56F0;color:#fff;border-radius:3px 0 0 3px", "background:#333;color:#fff;border-radius:0 3px 3px 0");
+  }
+  return true;
 }
+
+registerHeatfanCard();
+let heatfanChecks = 0;
+const heatfanTimer = setInterval(() => {
+  registerHeatfanCard();
+  if (++heatfanChecks >= 120) clearInterval(heatfanTimer); // check for one minute
+}, 500);

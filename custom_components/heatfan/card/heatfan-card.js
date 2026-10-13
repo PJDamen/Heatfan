@@ -11,7 +11,7 @@
  *   language: auto             # optional: auto | nl | en | de
  */
 
-const CARD_VERSION = "0.3.0";
+const CARD_VERSION = "0.3.1";
 const DEFAULT_COLOR = "#6E56F0";
 
 const STRINGS = {

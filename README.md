@@ -85,6 +85,9 @@ The integration ships its own icon and logo in `custom_components/heatfan/brand/
 
 ## Changelog
 
+**0.3.1**
+- Fix: "Custom element not found: heatfan-card" when the browser loaded the page while Home Assistant was starting. The card is now also added to the dashboard resources automatically (and kept up to date on updates).
+
 **0.3.0**
 - New dashboard card `custom:heatfan-card`, bundled and loaded automatically (NL/EN/DE, custom accent colour).
 - Fix: the curve numbers exposed their active mode as attribute `mode`, which clashed with the number entity's own `mode` (box/slider). Renamed to `active_mode`.

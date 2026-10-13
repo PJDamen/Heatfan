@@ -55,7 +55,7 @@ SENSORS: tuple[HeatfanSensorDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         suggested_display_precision=1,
-        value_fn=_round("temp_ext", 2),
+        value_fn=_round("temp_ext", 1),
     ),
     HeatfanSensorDescription(
         key="fan_speed",
@@ -77,6 +77,9 @@ SENSORS: tuple[HeatfanSensorDescription, ...] = (
         translation_key="last_seen",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
+        # Changes every minute by definition; off by default to keep the
+        # recorder quiet. Use the Connectivity sensor for online/offline.
+        entity_registry_enabled_default=False,
         value_fn=_last_seen,
     ),
     HeatfanSensorDescription(
@@ -88,7 +91,7 @@ SENSORS: tuple[HeatfanSensorDescription, ...] = (
         suggested_display_precision=1,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
-        value_fn=_round("temp_board", 2),
+        value_fn=_round("temp_board", 1),
     ),
     HeatfanSensorDescription(
         key="mcu_temperature",
@@ -99,7 +102,7 @@ SENSORS: tuple[HeatfanSensorDescription, ...] = (
         suggested_display_precision=1,
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
-        value_fn=_round("temp_mcu", 2),
+        value_fn=_round("temp_mcu", 1),
     ),
     HeatfanSensorDescription(
         key="rssi",

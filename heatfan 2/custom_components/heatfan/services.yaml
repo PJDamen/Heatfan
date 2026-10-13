@@ -1,0 +1,45 @@
+set_drive_params:
+  fields:
+    device_id:
+      required: true
+      selector:
+        device:
+          integration: heatfan
+          multiple: true
+    mode:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 6
+          mode: box
+    start_temp:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "°C"
+          mode: box
+    max_temp:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 100
+          unit_of_measurement: "°C"
+          mode: box
+    start_speed:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 10
+          mode: slider
+    max_speed:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 10
+          mode: slider

@@ -5,10 +5,14 @@
     "@PJDamen"
   ],
   "config_flow": true,
+  "dependencies": [
+    "frontend",
+    "http"
+  ],
   "documentation": "https://github.com/PJDamen/heatfan",
   "integration_type": "hub",
   "iot_class": "cloud_push",
   "issue_tracker": "https://github.com/PJDamen/heatfan/issues",
   "requirements": [],
-  "version": "0.2.0"
+  "version": "0.3.0"
 }

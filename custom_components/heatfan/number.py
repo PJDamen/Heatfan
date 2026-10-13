@@ -128,7 +128,8 @@ class HeatfanCurveNumber(HeatfanEntity, NumberEntity):
     @property
     def extra_state_attributes(self) -> dict[str, int] | None:
         active = self._active()
-        return {"mode": active[0]} if active else None
+        # Not "mode": that key is the number entity's own box/slider attribute.
+        return {"active_mode": active[0]} if active else None
 
     async def async_set_native_value(self, value: float) -> None:
         active = self._active()

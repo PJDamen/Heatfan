@@ -30,6 +30,21 @@ Only a Firebase refresh token is stored, not your password. If it ever stops wor
 
 The rooms from the app are not assigned to areas automatically; put each device in an area yourself.
 
+## Dashboard card
+
+The integration ships a compact card, one per unit. It is loaded automatically; no resource to add. In a dashboard choose **Add card → Heatfan**, pick the unit and optionally a colour and language.
+
+```yaml
+type: custom:heatfan-card
+device: <device id>      # picked in the visual editor
+name: Living room        # optional, defaults to the device name
+color: "#6E56F0"         # optional accent colour (hex or [r, g, b])
+show_curve: true         # optional, show the fan-curve row
+language: auto           # optional: auto | nl | en | de
+```
+
+The card shows the radiator temperature and trend, the fan speed, the six modes laid out like the controller (tap to switch) and, folded away, the fan curve of the active mode with +/− buttons. Entities are found through the device, so renamed entities and other languages work without changes.
+
 ## Recorder
 
 The units report about once a minute. Temperatures are rounded to 0.1 °C so tiny fluctuations don't create history rows. *Last update* changes every minute by definition, so it is disabled by default. An integration cannot exclude its own entities from the recorder; if you enable *Last update* and don't want its history, add this to `configuration.yaml`:
@@ -69,6 +84,10 @@ The integration ships its own icon and logo in `custom_components/heatfan/brand/
 - History lives under `heatfan-controller-dc/history-data/…` (not used; Home Assistant records its own history).
 
 ## Changelog
+
+**0.3.0**
+- New dashboard card `custom:heatfan-card`, bundled and loaded automatically (NL/EN/DE, custom accent colour).
+- Fix: the curve numbers exposed their active mode as attribute `mode`, which clashed with the number entity's own `mode` (box/slider). Renamed to `active_mode`.
 
 **0.2.0**
 - Temperatures rounded to 0.1 °C (fewer recorder writes).

@@ -11,6 +11,7 @@ import homeassistant.helpers.config_validation as cv
 from .api import HeatfanApi
 from .const import CONF_REFRESH_TOKEN, CONF_UID, DOMAIN
 from .coordinator import HeatfanConfigEntry, HeatfanCoordinator
+from .frontend import async_register_card
 from .services import async_setup_services
 
 PLATFORMS: list[Platform] = [
@@ -25,6 +26,7 @@ CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     async_setup_services(hass)
+    await async_register_card(hass)
     return True
 
 

@@ -11,7 +11,7 @@
  *   language: auto             # optional: auto | nl | en | de
  */
 
-const CARD_VERSION = "0.3.2";
+const CARD_VERSION = "0.4.0";
 const DEFAULT_COLOR = "#6E56F0";
 
 const STRINGS = {
@@ -38,6 +38,7 @@ const STRINGS = {
     f_color: "Accentkleur",
     f_show_curve: "Curve tonen",
     f_language: "Taal",
+    wifi: "Wifi",
     lang_auto: "Automatisch (taal van Home Assistant)",
   },
   en: {
@@ -63,6 +64,7 @@ const STRINGS = {
     f_color: "Accent colour",
     f_show_curve: "Show curve",
     f_language: "Language",
+    wifi: "Wi-Fi",
     lang_auto: "Automatic (Home Assistant language)",
   },
   de: {
@@ -88,6 +90,7 @@ const STRINGS = {
     f_color: "Akzentfarbe",
     f_show_curve: "Kurve anzeigen",
     f_language: "Sprache",
+    wifi: "WLAN",
     lang_auto: "Automatisch (Sprache von Home Assistant)",
   },
 };
@@ -106,6 +109,12 @@ const ICON = {
   falling: '<path d="M6 7l11 11M17 10.5V18H9.5"/>',
   stable: '<path d="M4 12h15M14 7l5 5-5 5"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
+  wifi:
+    '<path class="a3" d="M2.5 9.2a13.4 13.4 0 0 1 19 0"/>' +
+    '<path class="a2" d="M5.5 12.3a9.2 9.2 0 0 1 13 0"/>' +
+    '<path class="a1" d="M8.6 15.4a4.8 4.8 0 0 1 6.8 0"/>' +
+    '<circle class="a0" cx="12" cy="18.6" r="1.6"/>' +
+    '<path class="cut" d="M4 4.5 20 20.5"/>',
   minus: '<path d="M6 12h12"/>',
   plus: '<path d="M6 12h12M12 6v12"/>',
 };
@@ -189,11 +198,16 @@ const STYLE = `
   @media (prefers-reduced-motion: reduce) { .running .rotor { animation: none; } }
 
   .title { min-width: 0; text-align: left; }
-  .name { font-size: 15px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .name { min-width: 0; font-size: 15px; font-weight: 500; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sub { font-size: 12px; color: var(--secondary-text-color); display: flex; align-items: center; gap: 6px; line-height: 1.3; min-width: 0; }
   .sub span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success-color, #43a047); flex: none; }
-  .offline .dot { background: var(--error-color, #db4437); }
+  .nrow { display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .wifi { width: 16px; height: 16px; flex: none; fill: none; stroke: var(--secondary-text-color); stroke-width: 2.2; stroke-linecap: round; }
+  .wifi .a0 { fill: var(--secondary-text-color); stroke: none; }
+  .wifi .off { opacity: .25; }
+  .wifi .cut { display: none; stroke: var(--error-color, #db4437); stroke-width: 2.4; }
+  .offline .wifi path:not(.cut), .offline .wifi .a0 { opacity: .35; }
+  .offline .wifi .cut { display: inline; }
 
   .temp { display: flex; align-items: center; gap: 2px; font-variant-numeric: tabular-nums; }
   .tval { font-size: 22px; font-weight: 500; letter-spacing: -.01em; }
@@ -378,7 +392,7 @@ class HeatfanCard extends HTMLElement {
           <div class="top">
             <button class="head" data-more="temp">
               <span class="badge"><svg viewBox="-50 -50 100 100"><g class="rotor">${ICON.rotor}</g></svg></span>
-              <span class="title"><div class="name"></div><div class="sub"><i class="dot"></i><span class="status"></span></div></span>
+              <span class="title"><div class="nrow"><span class="name"></span><svg class="wifi" viewBox="0 0 24 24" role="img">${ICON.wifi}<title></title></svg></div><div class="sub"><span class="status"></span></div></span>
             </button>
             <div class="temp"><span class="tval">–</span><span class="tunit">°C</span><svg class="trend" viewBox="0 0 24 24"></svg></div>
           </div>
@@ -451,6 +465,11 @@ class HeatfanCard extends HTMLElement {
     const speed = offline ? 0 : this._num(ids[KEYS.speed]) ?? 0;
     const temp = this._num(ids[KEYS.temp]);
     const trend = this._state(ids[KEYS.trend])?.state;
+    const rssi = this._num(ids.rssi);
+    const bars = rssi === null ? 3 : rssi >= -60 ? 3 : rssi >= -72 ? 2 : 1;
+    const wifi = root.querySelector(".wifi");
+    ["a1", "a2", "a3"].forEach((c, i) => wifi.querySelector("." + c).classList.toggle("off", !offline && i + 1 > bars));
+    wifi.querySelector("title").textContent = offline ? t.offline : rssi === null ? t.wifi : `${t.wifi} ${rssi} dBm`;
     const modeState = this._state(ids[KEYS.mode])?.state || "";
     const mode = this._pending.mode ?? Number(modeState.replace("mode_", ""));
 

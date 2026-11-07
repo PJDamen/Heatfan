@@ -43,7 +43,7 @@ show_curve: true         # optional, show the fan-curve row
 language: auto           # optional: auto | nl | en | de
 ```
 
-The card shows the radiator temperature and trend, the fan speed, the six modes laid out like the controller (tap to switch) and, folded away, the fan curve of the active mode with +/− buttons. Entities are found through the device, so renamed entities and other languages work without changes.
+The card shows Wi-Fi status and signal, the radiator temperature and trend, the fan speed, the six modes laid out like the controller (tap to switch) and, folded away, the fan curve of the active mode with +/− buttons. Entities are found through the device, so renamed entities and other languages work without changes.
 
 ## Recorder
 
@@ -84,6 +84,9 @@ The integration ships its own icon and logo in `custom_components/heatfan/brand/
 - History lives under `heatfan-controller-dc/history-data/…` (not used; Home Assistant records its own history).
 
 ## Changelog
+
+**0.4.0**
+- Card: Wi-Fi icon next to the name, with signal bars from the Wi-Fi signal sensor; crossed out in red when the unit is offline. Hover for the dBm value.
 
 **0.3.2**
 - Fix: card intermittently showed "Custom element not found: heatfan-card". It was loaded so early that it registered before Home Assistant's frontend set up its own element registry. The card now loads as a dashboard resource only (storage mode) and re-registers itself if the registry changes.
